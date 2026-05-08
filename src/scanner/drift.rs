@@ -74,4 +74,31 @@ mod tests {
         let report = detect_drift("test", &prev, &curr).unwrap();
         assert_eq!(report.layers_changed.len(), 1);
     }
+
+    #[test]
+    fn new_layer_has_changed_inputs_marker() {
+        let prev = HashMap::new();
+        let mut curr = HashMap::new();
+        curr.insert("agent_models".into(), "blake3:first".into());
+        let report = detect_drift("my-agent", &prev, &curr).unwrap();
+        assert_eq!(report.agent_name, "my-agent");
+        assert_eq!(report.layers_changed[0].previous_hash, "");
+        assert_eq!(report.layers_changed[0].current_hash, "blake3:first");
+        assert_eq!(report.layers_changed[0].changed_inputs, vec!["new_layer"]);
+    }
+
+    #[test]
+    fn multiple_layers_changed() {
+        let mut prev = HashMap::new();
+        prev.insert("agent_binary".into(), "hash_a".into());
+        prev.insert("agent_config".into(), "hash_b".into());
+        let mut curr = HashMap::new();
+        curr.insert("agent_binary".into(), "hash_a_new".into());
+        curr.insert("agent_config".into(), "hash_b_new".into());
+        let report = detect_drift("multi", &prev, &curr).unwrap();
+        assert_eq!(report.layers_changed.len(), 2);
+        assert!(report.skills_added.is_empty());
+        assert!(report.skills_removed.is_empty());
+        assert!(report.skills_modified.is_empty());
+    }
 }

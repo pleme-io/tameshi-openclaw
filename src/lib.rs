@@ -6,7 +6,9 @@
 pub mod api;
 pub mod config;
 pub mod core;
+pub mod entities;
 pub mod error;
 pub mod hooks;
+pub mod mcps;
 pub mod scanner;
 pub mod skill;

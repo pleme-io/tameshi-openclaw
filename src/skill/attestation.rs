@@ -1,9 +1,10 @@
 use crate::core::types::SkillSourceType;
 use chrono::{DateTime, Utc};
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use tameshi::hash::Blake3Hash;
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct SkillAttestationRecord {
     pub skill_name: String,
     pub skill_hash: String,

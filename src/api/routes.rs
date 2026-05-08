@@ -28,3 +28,23 @@ async fn status(State(state): State<Arc<AppState>>) -> Json<ComplianceStatus> {
         skills_failed: 0,
     })
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn router_builds_successfully() {
+        let state = Arc::new(AppState {
+            agent_name: "test-agent".to_string(),
+        });
+        let app = router(state);
+        // Build a request to /health to verify the router works
+        let request = axum::http::Request::builder()
+            .uri("/health")
+            .body(axum::body::Body::empty())
+            .unwrap();
+        let response = tower::ServiceExt::oneshot(app, request).await.unwrap();
+        assert_eq!(response.status(), axum::http::StatusCode::OK);
+    }
+}

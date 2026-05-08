@@ -1,9 +1,10 @@
 use async_graphql::{Enum, InputObject, SimpleObject};
 use chrono::{DateTime, Utc};
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 /// Skill activation decision — the core output of the attestation gate.
-#[derive(Clone, Debug, Serialize, Deserialize, SimpleObject)]
+#[derive(Clone, Debug, Serialize, Deserialize, SimpleObject, JsonSchema)]
 pub struct SkillActivationDecision {
     pub decision: GateDecision,
     pub skill_name: String,
@@ -13,7 +14,7 @@ pub struct SkillActivationDecision {
     pub decided_at: DateTime<Utc>,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, Enum, Copy)]
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, Enum, Copy, JsonSchema)]
 pub enum GateDecision {
     Allow,
     Deny,
@@ -21,7 +22,7 @@ pub enum GateDecision {
 }
 
 /// Compliance status for an agent.
-#[derive(Clone, Debug, Serialize, Deserialize, SimpleObject)]
+#[derive(Clone, Debug, Serialize, Deserialize, SimpleObject, JsonSchema)]
 pub struct ComplianceStatus {
     pub agent_name: String,
     pub overall_status: OverallStatus,
@@ -32,7 +33,7 @@ pub struct ComplianceStatus {
     pub skills_failed: u32,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, Enum, Copy)]
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, Enum, Copy, JsonSchema)]
 pub enum OverallStatus {
     Compliant,
     NonCompliant,
@@ -40,7 +41,7 @@ pub enum OverallStatus {
     Degraded,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, SimpleObject)]
+#[derive(Clone, Debug, Serialize, Deserialize, SimpleObject, JsonSchema)]
 pub struct FrameworkAssessment {
     pub framework: String,
     pub status: OverallStatus,
@@ -51,7 +52,7 @@ pub struct FrameworkAssessment {
 }
 
 /// Drift report from continuous scanning.
-#[derive(Clone, Debug, Serialize, Deserialize, SimpleObject)]
+#[derive(Clone, Debug, Serialize, Deserialize, SimpleObject, JsonSchema)]
 pub struct DriftReport {
     pub agent_name: String,
     pub layers_changed: Vec<LayerDrift>,
@@ -61,7 +62,7 @@ pub struct DriftReport {
     pub detected_at: DateTime<Utc>,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, SimpleObject)]
+#[derive(Clone, Debug, Serialize, Deserialize, SimpleObject, JsonSchema)]
 pub struct LayerDrift {
     pub layer_type: String,
     pub previous_hash: String,
@@ -70,7 +71,7 @@ pub struct LayerDrift {
 }
 
 /// New skill request — input to the attestation gate.
-#[derive(Clone, Debug, Serialize, Deserialize, InputObject)]
+#[derive(Clone, Debug, Serialize, Deserialize, InputObject, JsonSchema)]
 pub struct NewSkillInput {
     pub name: String,
     pub source_code: String,
@@ -79,7 +80,7 @@ pub struct NewSkillInput {
     pub source_ref: Option<String>,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, Enum, Copy)]
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, Enum, Copy, JsonSchema)]
 pub enum SkillSourceType {
     Builtin,
     Store,
